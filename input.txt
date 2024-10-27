@@ -1,0 +1,40 @@
+He aahe x = 5; 
+Jar (x < 10) {
+    Chapa("X is less than 10");
+} Nahitar {
+    Chapa("X is greater or equal to 10");
+}
+
+
+
+function greet(name) {
+    print("Hello " + name);
+}
+
+greet("Utkarsh");
+
+
+
+For (i = 0; i < 5; i = i + 1) {
+    print(i);
+}
+
+
+He aahe x = 10;
+He aahe y = "Hello";
+print(x + y);
+
+He aahe x = 0;
+Jar (x < 5) {
+    print(x);
+    x = x + 1;
+}
+
+function add(a, b) {
+    He aahe sum = a + b;
+    return sum;
+}
+
+He aahe result = add(5, 10);
+print(result);  // Output: 15
+

@@ -1,0 +1,7 @@
+What's Next:
+Now that this test case works, you can expand your interpreter to include other functionalities, like:
+
+Loops (e.g., while or for loops).
+Support for more data types (e.g., strings, floats).
+Additional control flow like nested if-else statements, function declarations, etc.
+Let me know if you'd like to implement any new features or need help with the next steps!

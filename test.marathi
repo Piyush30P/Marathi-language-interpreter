@@ -1,0 +1,27 @@
+He aahe x = 10;    
+He aahe y = 5.5; 
+He aahe message = "Hello, ";  
+
+Chapa("Value of x: " + x);
+Chapa("Value of y: " + y);
+Chapa(message + "world!");
+
+
+Chapa("Concatenated message: " + message + "world!");
+
+He aahe g = 0;
+
+joparyant (g < 5) {
+    Chapa(g);
+    g = g + 1;
+}
+
+Chapa("Loop finished!");
+
+Chapa("Loop finished!");
+
+
+
+
+
+Chapa("Program completed successfully.");

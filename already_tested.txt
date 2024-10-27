@@ -1,0 +1,51 @@
+//case 1
+He aahe x = 15;  
+Jar (x < 10) {
+    Chapa("X is less than 10");
+} Nahitar {
+    Chapa("X is greater or equal to 10");
+}
+
+He aahe y = 9;
+Chapa(y);
+Chapa("Hello, World!");
+
+//case 2:
+He aahe a = 6;
+He aahe b = 6;
+Chapa(a + b);
+Chapa(a);
+Chapa("Hello ji");
+
+
+//function
+Karya greet(name) {
+    Chapa("Hello " + name);
+}
+
+greet("Utkarsh");
+
+
+Karya greet(name, age) {
+    Chapa("Hello " + name + ", you are " + age + " years old.");
+    Chapa("Next year you will be " + (age + 1));
+}
+
+greet("Utkarsh", 21);
+
+//while Loop
+He aahe x = 0;
+
+joparyant (x < 5) {
+    Chapa(x);
+    x = x + 1;
+}
+
+Chapa("Loop finished!");
+
+//for loop
+He aahe i = 0;
+Suruwaat(i = 0; i < 5; i = i + 1) {
+    Chapa(i);
+}
+Chapa("Loop finished!");
