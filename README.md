@@ -158,4 +158,4 @@ Loop finished!
 2. **Write Your Code**: In the code editor, write or paste any of the example codes.
 3. **Execute the Code**: Click the **Run** button, and the interpreter will parse, analyze, and display the results in the output window.
 
-Feel free to provide images or illustrations of the GUI to help users navigate the tool!
+
