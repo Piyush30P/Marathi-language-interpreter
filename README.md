@@ -35,8 +35,10 @@ By following these steps, you will successfully set up and compile the Marathi L
 ### Sample Code and Execution Explanation:
 
 #### **Case 1: Conditional Statements and Variable Declaration**
-```marathi
 <img width="670" alt="{7E4486B4-64D3-4BC4-8C78-35E16157FA33}" src="https://github.com/user-attachments/assets/e22edb9c-6e12-4ae3-8d74-e99422861e49">
+
+```marathi
+
 
 He aahe x = 15;  
 Jar (x < 10) {
