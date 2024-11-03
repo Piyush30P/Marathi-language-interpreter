@@ -36,6 +36,8 @@ By following these steps, you will successfully set up and compile the Marathi L
 
 #### **Case 1: Conditional Statements and Variable Declaration**
 ```marathi
+<img width="670" alt="{7E4486B4-64D3-4BC4-8C78-35E16157FA33}" src="https://github.com/user-attachments/assets/e22edb9c-6e12-4ae3-8d74-e99422861e49">
+
 He aahe x = 15;  
 Jar (x < 10) {
     Chapa("X is less than 10");
@@ -59,11 +61,14 @@ X is greater or equal to 10
 9
 Hello, World!
 ```
-<img width="670" alt="{7E4486B4-64D3-4BC4-8C78-35E16157FA33}" src="https://github.com/user-attachments/assets/e22edb9c-6e12-4ae3-8d74-e99422861e49">
+
 
 
 #### **Case 2: Basic Arithmetic Operations**
+<img width="666" alt="{C5979055-F8CC-41E1-8719-6E25832CF5D2}" src="https://github.com/user-attachments/assets/482b2c62-fa59-4d2b-938f-1895e2710fca">
+
 ```marathi
+
 He aahe a = 6;
 He aahe b = 6;
 Chapa(a + b);
@@ -82,10 +87,12 @@ Chapa("Hello ji");
 6
 Hello ji
 ```
-<img width="666" alt="{C5979055-F8CC-41E1-8719-6E25832CF5D2}" src="https://github.com/user-attachments/assets/482b2c62-fa59-4d2b-938f-1895e2710fca">
+
 
 
 #### **Functions: Single and Multiple Parameters**
+<img width="671" alt="{CA265878-C5FA-4FBA-BA08-222022762A72}" src="https://github.com/user-attachments/assets/090b63fb-d19d-4b0c-bffb-b9ac0a0f9b93">
+
 ```marathi
 Karya greet(name) {
     Chapa("Hello " + name);
@@ -107,9 +114,11 @@ Hello Utkarsh
 Hello Utkarsh, you are 21 years old.
 Next year you will be 22
 ```
-<img width="671" alt="{CA265878-C5FA-4FBA-BA08-222022762A72}" src="https://github.com/user-attachments/assets/090b63fb-d19d-4b0c-bffb-b9ac0a0f9b93">
+
 
 #### **While Loop**
+<img width="671" alt="{31F2459F-2C46-4EC8-8520-A8409A562067}" src="https://github.com/user-attachments/assets/dd66c88a-f1dd-42cd-b2a3-f14046d0eb70">
+
 ```marathi
 He aahe x = 0;
 
@@ -134,7 +143,7 @@ Chapa("Loop finished!");
 4
 Loop finished!
 ```
-<img width="671" alt="{31F2459F-2C46-4EC8-8520-A8409A562067}" src="https://github.com/user-attachments/assets/dd66c88a-f1dd-42cd-b2a3-f14046d0eb70">
+
 
 
 
