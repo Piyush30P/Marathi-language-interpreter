@@ -1,0 +1,18 @@
+// Loop Examples
+
+// While Loop
+He aahe x = 0;
+
+joparyant (x < 5) {
+    Chapa(x);
+    x = x + 1;
+}
+
+Chapa("Loop finished!");
+
+// For Loop
+He aahe i = 0;
+Suruwaat(i = 0; i < 5; i = i + 1) {
+    Chapa(i);
+}
+Chapa("For loop finished!");

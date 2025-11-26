@@ -1,0 +1,11 @@
+// Conditional Statements Example
+He aahe x = 15;
+Jar (x < 10) {
+    Chapa("X is less than 10");
+} Nahitar {
+    Chapa("X is greater or equal to 10");
+}
+
+He aahe y = 9;
+Chapa(y);
+Chapa("Hello, World!");

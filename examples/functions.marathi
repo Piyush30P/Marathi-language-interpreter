@@ -1,0 +1,16 @@
+// Function Declaration and Calling Examples
+
+// Single parameter function
+Karya greet(name) {
+    Chapa("Hello " + name);
+}
+
+greet("Utkarsh");
+
+// Multiple parameters function
+Karya greet(name, age) {
+    Chapa("Hello " + name + ", you are " + age + " years old.");
+    Chapa("Next year you will be " + (age + 1));
+}
+
+greet("Utkarsh", 21);

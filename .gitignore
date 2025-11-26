@@ -1,3 +1,38 @@
-bin/ 
-*.class 
-tempCodeRunnerFile.java 
+# Compiled class files
+bin/
+*.class
+out/
+
+# Build outputs
+build/
+target/
+dist/
+
+# IDE specific files
+.vscode/
+.idea/
+*.iml
+.settings/
+.project
+.classpath
+
+# Temporary files
+tempCodeRunnerFile.java
+*.tmp
+*.bak
+*.swp
+*~
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Package files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
