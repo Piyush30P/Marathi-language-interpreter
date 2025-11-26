@@ -1,27 +1,21 @@
 He aahe x = 10;    
 He aahe y = 5.5; 
-He aahe message = "Hello, ";  
+He aahe message = "Hello, World!";
 
 Chapa("Value of x: " + x);
 Chapa("Value of y: " + y);
-Chapa(message + "world!");
+Chapa(message);
 
-
-Chapa("Concatenated message: " + message + "world!");
-
-He aahe g = 0;
-
-joparyant (g < 5) {
-    Chapa(g);
-    g = g + 1;
+Jar (x > 5) {
+    Chapa("x is greater than 5");
+} Nahitar {
+    Chapa("x is not greater than 5");
 }
 
-Chapa("Loop finished!");
+He aahe counter = 0;
+joparyant (counter < 3) {
+    Chapa("Counter: " + counter);
+    counter = counter + 1;
+}
 
-Chapa("Loop finished!");
-
-
-
-
-
-Chapa("Program completed successfully.");
+Chapa("Program completed!");
