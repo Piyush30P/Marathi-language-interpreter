@@ -12,6 +12,7 @@ public class MarathiTokenizer {
 
     public Token nextToken() {
         skipWhitespace();
+        skipComments();  // Skip comments before processing tokens
 
         if (position >= input.length()) {
             return null;
@@ -52,6 +53,48 @@ public class MarathiTokenizer {
         if (input.startsWith("Bolav", position)) {
             position += "Bolav".length();
             return new Token("BOLAV", "Bolav");
+        }
+        // Boolean literals
+        if (input.startsWith("khara", position)) {
+            position += "khara".length();
+            return new Token("BOOLEAN", "khara");
+        }
+        if (input.startsWith("khota", position)) {
+            position += "khota".length();
+            return new Token("BOOLEAN", "khota");
+        }
+        // Logical operators
+        if (input.startsWith("aani", position)) {
+            position += "aani".length();
+            return new Token("LOGICAL_OP", "aani");
+        }
+        if (input.startsWith("kiva", position)) {
+            position += "kiva".length();
+            return new Token("LOGICAL_OP", "kiva");
+        }
+        if (input.startsWith("nahi", position)) {
+            position += "nahi".length();
+            return new Token("LOGICAL_OP", "nahi");
+        }
+        // User input
+        if (input.startsWith("Ghe", position)) {
+            position += "Ghe".length();
+            return new Token("INPUT", "Ghe");
+        }
+        // Return statement
+        if (input.startsWith("Parat", position)) {
+            position += "Parat".length();
+            return new Token("RETURN", "Parat");
+        }
+        // Break statement
+        if (input.startsWith("Thamba", position)) {
+            position += "Thamba".length();
+            return new Token("BREAK", "Thamba");
+        }
+        // Continue statement
+        if (input.startsWith("Pudhe", position)) {
+            position += "Pudhe".length();
+            return new Token("CONTINUE", "Pudhe");
         }
 
         // Handle string literals
@@ -119,6 +162,34 @@ public class MarathiTokenizer {
     private void skipWhitespace() {
         while (position < input.length() && Character.isWhitespace(input.charAt(position))) {
             position++;
+        }
+    }
+
+    private void skipComments() {
+        // Skip single-line comments (//)
+        if (position < input.length() - 1 && input.charAt(position) == '/' && input.charAt(position + 1) == '/') {
+            position += 2;
+            while (position < input.length() && input.charAt(position) != '\n') {
+                position++;
+            }
+            if (position < input.length()) {
+                position++; // Skip the newline
+            }
+            skipWhitespace();
+            skipComments(); // Recursively check for more comments
+        }
+        // Skip multi-line comments (/* */)
+        else if (position < input.length() - 1 && input.charAt(position) == '/' && input.charAt(position + 1) == '*') {
+            position += 2;
+            while (position < input.length() - 1) {
+                if (input.charAt(position) == '*' && input.charAt(position + 1) == '/') {
+                    position += 2;
+                    break;
+                }
+                position++;
+            }
+            skipWhitespace();
+            skipComments(); // Recursively check for more comments
         }
     }
 
