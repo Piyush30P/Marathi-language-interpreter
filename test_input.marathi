@@ -1,0 +1,9 @@
+// Test file for user input feature
+// This requires user interaction
+
+Chapa("=== Testing User Input ===");
+He aahe name = Ghe("Enter your name: ");
+Chapa("Welcome, " + name + "!");
+
+He aahe age = Ghe("Enter your age: ");
+Chapa("You are " + age + " years old.");

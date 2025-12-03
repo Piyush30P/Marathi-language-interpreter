@@ -52,16 +52,22 @@ public class MarathiParser {
             return parseVariableDeclaration();
         } else if (match("PRINT")) {
             return parsePrintStatement();
-        } 
+        }
         else if (match("FOR")) {
             return parseForStatement();
         }else if (match("IF")) {
             return parseIfStatement();
         } else if (match("WHILE")) {  // Handle while loops
             return parseWhileStatement();
+        } else if (match("RETURN")) {  // Handle return statements
+            return parseReturnStatement();
+        } else if (match("BREAK")) {  // Handle break statements
+            return parseBreakStatement();
+        } else if (match("CONTINUE")) {  // Handle continue statements
+            return parseContinueStatement();
         } else if (match("IDENTIFIER")) {  // Handle assignment or function calls
             Token identifierToken = consume("IDENTIFIER");
-            
+
             if (match("OPERATOR") && currentToken().getValue().equals("=")) {  // Handle assignments
                 return parseAssignment(identifierToken.getValue());
             } else {  // Handle function calls
@@ -139,33 +145,35 @@ public class MarathiParser {
     private ASTNode parseForStatement() {
         consume("FOR");  // Consume 'Suruwaat'
         consume("LPAREN");  // Consume '('
-    
+
         // Parse initialization (e.g., He aahe i = 0 or i = 0)
         ASTNode initialization = null;
         if (match("VAR_DECL")) {  // Variable declaration for initialization (He aahe i = 0)
-            initialization = parseVariableDeclaration();  // Parse variable declaration
+            initialization = parseVariableDeclaration();  // Parse variable declaration (includes semicolon)
         } else if (match("IDENTIFIER")) {  // Assignment for initialization (i = 0)
             String variableName = consume("IDENTIFIER").getValue();  // Get the variable name
-            initialization = parseAssignment(variableName);  // Parse the assignment
+            initialization = parseAssignment(variableName);  // Parse the assignment (includes semicolon)
+        } else {
+            consume("SEMICOLON");  // Empty initialization
         }
-        consume("SEMICOLON");  // Ensure semicolon is consumed after initialization
-    
+        // Note: semicolon already consumed by parseVariableDeclaration or parseAssignment
+
         // Parse condition (e.g., i < 5)
         ASTNode condition = parseExpression();  // Parse the loop condition
         consume("SEMICOLON");  // Ensure semicolon is consumed after the condition
-    
+
         // Parse increment (e.g., i = i + 1)
         String incrementVariable = consume("IDENTIFIER").getValue();  // Get the increment variable name
         consume("OPERATOR");  // Consume the '=' operator
         ASTNode incrementValue = parseExpression();  // Parse the expression for the increment
         consume("RPAREN");  // Ensure ')' is consumed after the increment expression
         consume("LBRACE");  // Ensure '{' is consumed to start the loop body
-    
+
         // Parse the loop body
         ASTNode body = parseBlock();  // Parse the block as the loop body
-    
+
         consume("RBRACE");  // Ensure '}' is consumed to close the loop body
-    
+
         return new ForStatementNode(initialization, condition, new AssignmentNode(incrementVariable, incrementValue), body);  // Return the for loop node
     }
     
@@ -173,29 +181,74 @@ public class MarathiParser {
     
     private ASTNode parseExpression() {
         ASTNode left = parsePrimaryExpression();  // Start by parsing the left-hand side
-    
-        // Check for binary operators like +, -, *, /
-        while (match("OPERATOR")) {
-            String operator = consume("OPERATOR").getValue();
+
+        // Check for binary operators like +, -, *, / and logical operators
+        while (match("OPERATOR") || match("LOGICAL_OP")) {
+            String operator;
+            if (match("OPERATOR")) {
+                operator = consume("OPERATOR").getValue();
+            } else {
+                operator = consume("LOGICAL_OP").getValue();
+            }
             ASTNode right = parsePrimaryExpression();  // Parse the right-hand side
             left = new BinaryOperationNode(left, operator, right);  // Create a BinaryOperationNode
         }
-    
+
         return left;  // Return the full expression
     }
     
     private ASTNode parsePrimaryExpression() {
         if (match("IDENTIFIER")) {
-            return new VariableReferenceNode(consume("IDENTIFIER").getValue());  // Handle variables
+            Token idToken = consume("IDENTIFIER");
+            // Check if it's a function call (identifier followed by '(')
+            if (match("LPAREN")) {
+                return parseFunctionCallExpression(idToken.getValue());
+            } else {
+                return new VariableReferenceNode(idToken.getValue());  // Handle variables
+            }
         } else if (match("FLOAT")) {
             return new FloatNode(consume("FLOAT").getValue());  // Handle floats
         } else if (match("NUMBER")) {
             return new NumberNode(consume("NUMBER").getValue());  // Handle integers
         } else if (match("STRING")) {
             return new StringNode(consume("STRING").getValue());  // Handle string literals
+        } else if (match("BOOLEAN")) {
+            String boolValue = consume("BOOLEAN").getValue();
+            return new BooleanNode(boolValue.equals("khara"));  // Handle boolean literals
+        } else if (match("INPUT")) {
+            return parseInputExpression();  // Handle user input
         } else {
             throw new RuntimeException("Unexpected expression: " + currentToken());  // Handle unexpected tokens
         }
+    }
+
+    private ASTNode parseFunctionCallExpression(String functionName) {
+        consume("LPAREN");  // Expect '('
+        List<ASTNode> arguments = new ArrayList<>();
+
+        if (!match("RPAREN")) {
+            arguments.add(parseExpression());  // Parse the first argument
+
+            while (match("COMMA")) {  // Handle multiple arguments
+                consume("COMMA");
+                arguments.add(parseExpression());
+            }
+        }
+
+        consume("RPAREN");  // Expect ')'
+        // Note: No semicolon here since it's an expression, not a statement
+        return new FunctionCallNode(functionName, arguments);
+    }
+
+    private ASTNode parseInputExpression() {
+        consume("INPUT");  // Consume 'Ghe'
+        consume("LPAREN");
+        String prompt = "";
+        if (match("STRING")) {
+            prompt = consume("STRING").getValue();
+        }
+        consume("RPAREN");
+        return new InputNode(prompt);
     }
     
     
@@ -204,19 +257,10 @@ public class MarathiParser {
         consume("VAR_DECL");
         String variableName = consume("IDENTIFIER").getValue();
         consume("OPERATOR"); // Expect '='
-        
-        // Handle both NUMBER and FLOAT
-        ASTNode value;
-        if (match("NUMBER")) {
-            value = new NumberNode(consume("NUMBER").getValue()); // Parse number
-        } else if (match("FLOAT")) {
-            value = new FloatNode(consume("FLOAT").getValue()); // Parse float
-        } else if (match("STRING")) {
-            value = new StringNode(consume("STRING").getValue()); // Parse string
-        } else {
-            throw new RuntimeException("Expected NUMBER, FLOAT, or STRING but found: " + currentToken());
-        }
-        
+
+        // Handle different value types or expressions
+        ASTNode value = parseExpression();  // Parse the expression (can be number, float, string, boolean, input, or complex expression)
+
         consume("SEMICOLON");
         return new VariableDeclarationNode(variableName, value);
     }
@@ -282,5 +326,27 @@ public class MarathiParser {
         String operator = consume("OPERATOR").getValue();
         String value = consume("NUMBER").getValue();
         return new ConditionNode(variableName, operator, value);
+    }
+
+    private ASTNode parseReturnStatement() {
+        consume("RETURN");  // Consume 'Parat'
+        ASTNode expression = null;
+        if (!match("SEMICOLON")) {  // Check if there's a return value
+            expression = parseExpression();
+        }
+        consume("SEMICOLON");
+        return new ReturnStatementNode(expression);
+    }
+
+    private ASTNode parseBreakStatement() {
+        consume("BREAK");  // Consume 'Thamba'
+        consume("SEMICOLON");
+        return new BreakStatementNode();
+    }
+
+    private ASTNode parseContinueStatement() {
+        consume("CONTINUE");  // Consume 'Pudhe'
+        consume("SEMICOLON");
+        return new ContinueStatementNode();
     }
 }

@@ -3,6 +3,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class MarathiInterpreter {
     // A symbol table to store variable names and their values
@@ -10,6 +11,22 @@ public class MarathiInterpreter {
 
     // List to accumulate output
     private List<String> outputBuffer = new ArrayList<>();
+
+    // Scanner for user input
+    private Scanner scanner = new Scanner(System.in);
+
+    // Exception classes for control flow
+    public static class BreakException extends RuntimeException {}
+    public static class ContinueException extends RuntimeException {}
+    public static class ReturnException extends RuntimeException {
+        private Object value;
+        public ReturnException(Object value) {
+            this.value = value;
+        }
+        public Object getValue() {
+            return value;
+        }
+    }
 
     public void interpret(ASTNode node) {
         if (node instanceof BlockNode) {
@@ -30,6 +47,12 @@ public class MarathiInterpreter {
             interpretAssignmentNode((AssignmentNode) node); // Handle assignments
         } else if (node instanceof FunctionCallNode) { // Handle function calls
             interpretFunctionCallNode((FunctionCallNode) node);
+        } else if (node instanceof ReturnStatementNode) {
+            interpretReturnStatementNode((ReturnStatementNode) node);
+        } else if (node instanceof BreakStatementNode) {
+            throw new BreakException();
+        } else if (node instanceof ContinueStatementNode) {
+            throw new ContinueException();
         } else {
             throw new RuntimeException("Unexpected AST node type: " + node.getClass().getName());
         }
@@ -108,8 +131,14 @@ public class MarathiInterpreter {
                 break; // Exit the loop if the condition is false
             }
 
-            // Execute the loop body
-            interpret(whileStmtNode.getBody());
+            try {
+                // Execute the loop body
+                interpret(whileStmtNode.getBody());
+            } catch (BreakException e) {
+                break;  // Exit the loop on break statement
+            } catch (ContinueException e) {
+                continue;  // Continue to next iteration on continue statement
+            }
         }
     }
 
@@ -119,7 +148,13 @@ public class MarathiInterpreter {
 
         // Interpret the condition, increment, and loop body
         while ((boolean) evaluateExpression(forStmtNode.getCondition())) {
-            interpret(forStmtNode.getBody());
+            try {
+                interpret(forStmtNode.getBody());
+            } catch (BreakException e) {
+                break;  // Exit the loop on break statement
+            } catch (ContinueException e) {
+                // Continue to next iteration, but still execute the increment
+            }
             interpret(forStmtNode.getIncrement());
         }
     }
@@ -129,23 +164,9 @@ public class MarathiInterpreter {
         System.out.println("  Variable Name: " + varDeclNode.getVariableName());
         System.out.println("  Value: " + varDeclNode.getValue());
 
-        // Check the type of the value and store it in the symbol table
-        if (varDeclNode.getValue() instanceof NumberNode) {
-            // Handle integer numbers
-            NumberNode numberNode = (NumberNode) varDeclNode.getValue();
-            symbolTable.put(varDeclNode.getVariableName(), Integer.parseInt(numberNode.getValue()));
-        } else if (varDeclNode.getValue() instanceof FloatNode) {
-            // Handle floating-point numbers
-            FloatNode floatNode = (FloatNode) varDeclNode.getValue();
-            symbolTable.put(varDeclNode.getVariableName(), Double.parseDouble(floatNode.getValue()));
-        } else if (varDeclNode.getValue() instanceof StringNode) {
-            // Handle strings
-            StringNode stringNode = (StringNode) varDeclNode.getValue();
-            symbolTable.put(varDeclNode.getVariableName(), stringNode.getValue());
-        } else {
-            throw new RuntimeException(
-                    "Unsupported variable declaration value type: " + varDeclNode.getValue().getClass().getName());
-        }
+        // Evaluate the expression and store it in the symbol table
+        Object value = evaluateExpression(varDeclNode.getValue());
+        symbolTable.put(varDeclNode.getVariableName(), value);
     }
 
     private Map<String, FunctionDeclarationNode> functionTable = new HashMap<>(); // Store functions
@@ -154,7 +175,7 @@ public class MarathiInterpreter {
         functionTable.put(funcDeclNode.getFunctionName(), funcDeclNode); // Store the function in the function table
     }
 
-    private void interpretFunctionCallNode(FunctionCallNode funcCallNode) {
+    private Object interpretFunctionCallNode(FunctionCallNode funcCallNode) {
         String functionName = funcCallNode.getFunctionName();
         FunctionDeclarationNode funcDecl = functionTable.get(functionName); // Get the function declaration
 
@@ -176,11 +197,26 @@ public class MarathiInterpreter {
             symbolTable.put(funcDecl.getParameters().get(i), argumentValues.get(i));
         }
 
-        // Execute the function body
-        interpret(funcDecl.getBody());
+        // Execute the function body and handle return values
+        Object returnValue = null;
+        try {
+            interpret(funcDecl.getBody());
+        } catch (ReturnException e) {
+            returnValue = e.getValue();
+        }
 
         // Restore the previous symbol table
         symbolTable = previousSymbolTable;
+
+        return returnValue;
+    }
+
+    private void interpretReturnStatementNode(ReturnStatementNode returnNode) {
+        Object value = null;
+        if (returnNode.getExpression() != null) {
+            value = evaluateExpression(returnNode.getExpression());
+        }
+        throw new ReturnException(value);
     }
 
     // Evaluate the expression (either a variable reference, number, or binary
@@ -197,6 +233,21 @@ private Object evaluateExpression(ASTNode node) {
     } else if (node instanceof FloatNode) {
         // Handle floating-point numbers
         return Double.parseDouble(((FloatNode) node).getValue());
+    } else if (node instanceof BooleanNode) {
+        // Handle boolean literals
+        return ((BooleanNode) node).getValue();
+    } else if (node instanceof InputNode) {
+        // Handle user input
+        InputNode inputNode = (InputNode) node;
+        if (!inputNode.getPrompt().isEmpty()) {
+            System.out.print(inputNode.getPrompt());
+            outputBuffer.add(inputNode.getPrompt());
+        }
+        String input = scanner.nextLine();
+        return input;
+    } else if (node instanceof FunctionCallNode) {
+        // Handle function calls in expressions (for return values)
+        return interpretFunctionCallNode((FunctionCallNode) node);
     } else if (node instanceof BinaryOperationNode) {
         // Handle binary operations like a + b or relational operators
         BinaryOperationNode binOp = (BinaryOperationNode) node;
@@ -204,9 +255,27 @@ private Object evaluateExpression(ASTNode node) {
         Object right = evaluateExpression(binOp.getRight());
         String operator = binOp.getOperator();
 
+        // Handle logical operators
+        if (operator.equals("aani")) {  // AND
+            return asBoolean(left) && asBoolean(right);
+        } else if (operator.equals("kiva")) {  // OR
+            return asBoolean(left) || asBoolean(right);
+        } else if (operator.equals("nahi")) {  // NOT (unary, but handled as binary for simplicity)
+            return !asBoolean(right);
+        }
+
         // Handle string concatenation
         if (left instanceof String || right instanceof String) {
             return left.toString() + right.toString();
+        }
+
+        // Handle boolean comparisons
+        if (left instanceof Boolean || right instanceof Boolean) {
+            if (operator.equals("==")) {
+                return left.equals(right);
+            } else if (operator.equals("!=")) {
+                return !left.equals(right);
+            }
         }
 
         // Handle mixed-type arithmetic (integers and floats)
@@ -290,6 +359,21 @@ private Object evaluateBinaryOperation(double left, double right, String operato
             return (Double) value;
         } else {
             throw new RuntimeException("Unexpected value type: " + value.getClass().getName());
+        }
+    }
+
+    // Helper method to cast values to boolean
+    private boolean asBoolean(Object value) {
+        if (value instanceof Boolean) {
+            return (Boolean) value;
+        } else if (value instanceof Integer) {
+            return (Integer) value != 0;
+        } else if (value instanceof Double) {
+            return (Double) value != 0.0;
+        } else if (value instanceof String) {
+            return !((String) value).isEmpty();
+        } else {
+            throw new RuntimeException("Cannot convert value to boolean: " + value);
         }
     }
 

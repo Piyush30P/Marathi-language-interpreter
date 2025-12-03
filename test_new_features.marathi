@@ -1,0 +1,74 @@
+// Test file for new features in Marathi Language Interpreter
+// This file tests: Boolean, Logical operators, Comments, Return, Break, Continue
+
+/* Multi-line comment test
+   Testing if multi-line comments work correctly
+*/
+
+Chapa("=== Testing Boolean Data Type ===");
+He aahe isActive = khara;
+He aahe isDisabled = khota;
+Chapa("isActive: " + isActive);
+Chapa("isDisabled: " + isDisabled);
+
+Chapa("=== Testing Logical Operators ===");
+He aahe a = khara;
+He aahe b = khota;
+Chapa("a aani b (AND): ");
+He aahe result1 = a aani b;
+Chapa(result1);
+Chapa("a kiva b (OR): ");
+He aahe result2 = a kiva b;
+Chapa(result2);
+
+Chapa("=== Testing Conditional with Boolean ===");
+He aahe age = 20;
+Jar (age > 18) {
+    Chapa("You are an adult");
+}
+
+Chapa("=== Testing Return Statement ===");
+Karya add(x, y) {
+    Parat x + y;
+}
+He aahe sum = add(5, 3);
+Chapa("Sum of 5 and 3: " + sum);
+
+Karya greet(name) {
+    Parat "Namaskar " + name;
+}
+He aahe greeting = greet("Pratik");
+Chapa(greeting);
+
+Chapa("=== Testing Break Statement ===");
+He aahe i = 0;
+joparyant (i < 10) {
+    Jar (i == 5) {
+        Chapa("Breaking at i = 5");
+        Thamba;
+    }
+    Chapa("i = " + i);
+    i = i + 1;
+}
+
+Chapa("=== Testing Continue Statement ===");
+He aahe j = 0;
+joparyant (j < 5) {
+    j = j + 1;
+    Jar (j == 3) {
+        Chapa("Skipping j = 3");
+        Pudhe;
+    }
+    Chapa("j = " + j);
+}
+
+Chapa("=== Testing For Loop with Break ===");
+Suruwaat (He aahe k = 0; k < 10; k = k + 1) {
+    Jar (k == 7) {
+        Chapa("Breaking for loop at k = 7");
+        Thamba;
+    }
+    Chapa("k = " + k);
+}
+
+Chapa("=== All Tests Completed Successfully! ===");

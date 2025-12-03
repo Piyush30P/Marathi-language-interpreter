@@ -37,6 +37,8 @@ java -cp bin/ Main
 He aahe x = 15;        // Number
 He aahe name = "John"; // String
 He aahe pi = 3.14;     // Float
+He aahe isActive = khara;  // Boolean (true)
+He aahe isDisabled = khota; // Boolean (false)
 ```
 
 ### Conditional Statements
@@ -49,6 +51,26 @@ Jar (x < 10) {
 }
 ```
 
+### Logical Operators
+
+```marathi
+He aahe a = khara;
+He aahe b = khota;
+
+// AND operator
+Jar (a aani b) {
+    Chapa("Both are true");
+}
+
+// OR operator
+Jar (a kiva b) {
+    Chapa("At least one is true");
+}
+
+// NOT operator
+He aahe result = nahi b;
+```
+
 ### Loops
 
 ```marathi
@@ -57,15 +79,70 @@ joparyant (x < 5) {
     Chapa(x);
     x = x + 1;
 }
+
+// For loop
+Suruwaat (He aahe i = 0; i < 10; i = i + 1) {
+    Chapa(i);
+}
 ```
 
-### Functions
+### Loop Control Statements
 
 ```marathi
+// Break statement
+joparyant (x < 10) {
+    Jar (x == 5) {
+        Thamba;  // Exit the loop
+    }
+    x = x + 1;
+}
+
+// Continue statement
+joparyant (x < 10) {
+    x = x + 1;
+    Jar (x == 5) {
+        Pudhe;  // Skip to next iteration
+    }
+    Chapa(x);
+}
+```
+
+### Functions with Return Values
+
+```marathi
+// Function returning a value
+Karya add(x, y) {
+    Parat x + y;  // Return statement
+}
+He aahe result = add(5, 3);
+Chapa("Result: " + result);
+
+// Function without explicit return
 Karya greet(name) {
     Chapa("Hello " + name);
 }
 greet("World");
+```
+
+### User Input
+
+```marathi
+He aahe name = Ghe("Enter your name: ");
+Chapa("Welcome, " + name);
+
+He aahe age = Ghe("Enter your age: ");
+Chapa("You are " + age + " years old");
+```
+
+### Comments
+
+```marathi
+// Single-line comment
+
+/* Multi-line comment
+   can span multiple lines */
+
+He aahe x = 10;  // Inline comment
 ```
 
 ### Print Statements
@@ -77,14 +154,24 @@ Chapa(x + y);
 
 ## 📝 Marathi Keywords
 
-| English              | Marathi     | Usage                       |
-| -------------------- | ----------- | --------------------------- |
-| Variable declaration | `He aahe`   | `He aahe x = 5;`            |
-| If                   | `Jar`       | `Jar (condition) { }`       |
-| Else                 | `Nahitar`   | `Nahitar { }`               |
-| While                | `joparyant` | `joparyant (condition) { }` |
-| Function             | `Karya`     | `Karya functionName() { }`  |
-| Print                | `Chapa`     | `Chapa("text");`            |
+| English              | Marathi     | Usage                          |
+| -------------------- | ----------- | ------------------------------ |
+| Variable declaration | `He aahe`   | `He aahe x = 5;`               |
+| If                   | `Jar`       | `Jar (condition) { }`          |
+| Else                 | `Nahitar`   | `Nahitar { }`                  |
+| While                | `joparyant` | `joparyant (condition) { }`    |
+| For                  | `Suruwaat`  | `Suruwaat (init; cond; inc) { }` |
+| Function             | `Karya`     | `Karya functionName() { }`     |
+| Print                | `Chapa`     | `Chapa("text");`               |
+| Return               | `Parat`     | `Parat value;`                 |
+| Break                | `Thamba`    | `Thamba;`                      |
+| Continue             | `Pudhe`     | `Pudhe;`                       |
+| Input                | `Ghe`       | `Ghe("prompt")`                |
+| True                 | `khara`     | `He aahe x = khara;`           |
+| False                | `khota`     | `He aahe y = khota;`           |
+| AND                  | `aani`      | `a aani b`                     |
+| OR                   | `kiva`      | `a kiva b`                     |
+| NOT                  | `nahi`      | `nahi a`                       |
 
 ## 🔧 Architecture
 
